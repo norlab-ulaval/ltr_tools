@@ -87,10 +87,12 @@ void loadLTR(const std::string &fileName)
     trajectory.featureLabels.push_back(PM::DataPoints::Label("y", 1));
     trajectory.featureLabels.push_back(PM::DataPoints::Label("z", 1));
     trajectory.featureLabels.push_back(PM::DataPoints::Label("w", 1));
-    trajectory.descriptors = PM::Matrix::Ones(4, numberOfPoints);
+    trajectory.descriptors = PM::Matrix::Ones(5, numberOfPoints);
+    trajectory.addDescriptor("id", PM::Matrix::Constant(1, numberOfPoints, 0));
     trajectory.addDescriptor("orientation", PM::Matrix::Constant(3, numberOfPoints, 0));
     trajectory.addDescriptor("direction", PM::Matrix::Constant(1, numberOfPoints, 0));
 
+    auto ids{ trajectory.getDescriptorViewByName("id") };
     auto orientations{ trajectory.getDescriptorViewByName("orientation") };
     auto directions{ trajectory.getDescriptorViewByName("direction") };
     for(int i = 0; i < numberOfPoints; ++i)
@@ -100,6 +102,7 @@ void loadLTR(const std::string &fileName)
         trajectory.features(1, i) = trajectoryPoint.y;
         trajectory.features(2, i) = trajectoryPoint.z;
         trajectory.features(3, i) = 1;
+        ids(0, i) = i;
         orientations(0, i) = trajectoryPoint.roll;
         orientations(1, i) = trajectoryPoint.pitch;
         orientations(2, i) = trajectoryPoint.yaw;

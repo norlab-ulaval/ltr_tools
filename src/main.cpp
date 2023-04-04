@@ -28,6 +28,7 @@ void loadLTR(const std::string &fileName)
     bool parsingMap = true;
     bool direction = false;
     std::cout << "Parsing map..." << std::endl;
+    int ctr = 0;
     while(std::getline(ltrFile, line))
     {
         if(parsingMap)
@@ -72,9 +73,9 @@ void loadLTR(const std::string &fileName)
             float const qw = std::stod(line.substr(previousCursorPosition, cursorPosition));
 
             const Eigen::Quaternion<float> quat(qw, qx, qy, qz);
-            auto euler = quat.toRotationMatrix().eulerAngles(0, 1, 2);
 
-            trajectoryVec.emplace_back(x ,y ,z, euler[0], euler[1], euler[2], direction);
+            auto orientPoint = (quat * Eigen::Vector3f {1, 0, 0});
+            trajectoryVec.emplace_back(x , y , z, orientPoint[0], orientPoint[1], orientPoint[2], direction);
         }
     }
 

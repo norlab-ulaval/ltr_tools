@@ -36,8 +36,9 @@ inspectLtr <path_to_ltr_file>
 
 ### ltr_add_z_coord
 Add the z coordinate to the first version of an .ltr file format, making it compatible with new code tools.
+Z coordinate can either be explicitly set in the third argument, or is derived from each point's nearest neighbors in the map.
 
 #### Usage
 ```
-ltr_add_z_coord <path_to_input_ltr_file> <path_to_output_ltr_file>
+ltr_add_z_coord <path_to_input_ltr_file> <path_to_output_ltr_file> <z_coord>
 ```

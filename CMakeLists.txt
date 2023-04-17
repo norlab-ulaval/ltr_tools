@@ -8,6 +8,7 @@ add_executable(ltr2vtk_convertor src/ltr2vtk_convertor.cpp)
 target_link_libraries(ltr2vtk_convertor ${libpointmatcher_LIBRARIES})
 
 add_executable(ltr_add_z_coord src/ltr_add_z_coord.cpp)
+target_link_libraries(ltr_add_z_coord ${libpointmatcher_LIBRARIES})
 
 message(${CMAKE_BINARY_DIR})
 

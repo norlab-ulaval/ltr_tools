@@ -83,6 +83,7 @@ void loadLTR(const std::string &fileName)
     PM::DataPoints trajectory;
     size_t numberOfPoints = trajectoryVec.size();
     trajectory.features = PM::Matrix::Ones(4, numberOfPoints);
+//  normalized coordinates
     trajectory.featureLabels.push_back(PM::DataPoints::Label("x", 1));
     trajectory.featureLabels.push_back(PM::DataPoints::Label("y", 1));
     trajectory.featureLabels.push_back(PM::DataPoints::Label("z", 1));

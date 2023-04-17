@@ -1,6 +1,6 @@
 # ltr_tools
 
-Simple tool to split an .ltr file into map and trajectory files and visualize them in ParaView with predefined window state.
+Set of tools to work with .ltr files
 
 ## Dependencies
 + Eigen
@@ -18,12 +18,26 @@ make
 sudo make install
 ```
 
-## Usage
+## Uninstallation
+```
+sudo rm -rf /usr/local/bin/ltr2vtkConvertor /usr/local/bin/inspectLtr /usr/local/bin/ltr_add_z_coord /usr/local/etc/ltr_tools/
+```
+
+
+## Tools
+### inspectLtr
+Split an .ltr file into map and trajectory files and visualize them in ParaView with predefined window state.
+
+#### Usage
 ```
 inspectLtr <path_to_ltr_file>
 ```
 
-## Uninstallation
+
+### ltr_add_z_coord
+Add the z coordinate to the first version of an .ltr file format, making it compatible with new code tools.
+
+#### Usage
 ```
-sudo rm -rf /usr/local/bin/ltr2vtk_convertor /usr/local/bin/inspectLtr /usr/local/etc/ltr_tools/
+ltr_add_z_coord <path_to_input_ltr_file> <path_to_output_ltr_file>
 ```

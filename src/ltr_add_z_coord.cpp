@@ -7,14 +7,14 @@ typedef Nabo::NearestNeighbourSearch<float> NNS;
 typedef PointMatcher<float> PM;
 const std::string TRAJECTORY_DELIMITER = "#############################";
 
-void loadLTR(const std::string &inputFileName, const std::string &outputFileName, bool computeZ, float inZ)
+void loadLTR(const std::string& inputFileName, const std::string& outputFileName, bool computeZ, float inZ)
 {
     const std::string tmpMapFileName = "/tmp/map.vtk";
     std::ifstream ltrFile(inputFileName);
     std::ofstream tmpMapFile(tmpMapFileName);
     std::ofstream outputFile(outputFileName);
 
-    int knn = 10;
+    int knn = 50;
     PM::DataPoints map;
     PM::DataPoints trajPoint;
     trajPoint.features = PM::Matrix::Ones(4, 1);
@@ -43,6 +43,8 @@ void loadLTR(const std::string &inputFileName, const std::string &outputFileName
                 std::cout << "Map done" << std::endl;
                 tmpMapFile.close();
                 map = PM::DataPoints::load(tmpMapFileName);
+                nns = std::shared_ptr<NNS>(NNS::create(map.features, map.features.rows() - 1,
+                                                       NNS::KDTREE_LINEAR_HEAP, NNS::TOUCH_STATISTICS));
             }
             else
             {
@@ -71,35 +73,30 @@ void loadLTR(const std::string &inputFileName, const std::string &outputFileName
             float const qw = std::stod(line.substr(previousCursorPosition, cursorPosition));
 
             float z = prev_z;
-            if (computeZ) {
+            if(computeZ)
+            {
                 trajPoint.features(0, 0) = x;
                 trajPoint.features(1, 0) = y;
                 trajPoint.features(2, 0) = z;
                 trajPoint.features(3, 0) = 1.0;
-                std::shared_ptr<PM::DataPointsFilter> boundingBoxFilter =
-                        PM::get().DataPointsFilterRegistrar.create(
-                                "BoundingBoxDataPointsFilter",
-                                {
-                                        {"xMin",         std::to_string(x - 0.25)},
-                                        {"xMax",         std::to_string(x + 0.25)},
-                                        {"yMin",         std::to_string(y - 0.25)},
-                                        {"yMax",         std::to_string(y + 0.25)},
-                                        {"zMin",         std::to_string(z - 100000.0)},
-                                        {"zMax",         std::to_string(z - 100000.0)},
-                                        {"removeInside", std::to_string(0)}
-                                }
-                        );
 
-                auto bb = boundingBoxFilter->filter(map);
-                if (bb.getNbPoints() != 0) {
-                    nns = std::shared_ptr<NNS>(NNS::create(bb.features, bb.features.rows() - 1,
-                                                           NNS::KDTREE_LINEAR_HEAP, NNS::TOUCH_STATISTICS));
-                    nns->knn(trajPoint.features, matches.ids, matches.dists, knn, 0);
-                    for (int i = 0; i < matches.ids.size(); ++i) {
-                        z += map.features(2, matches.ids(i));
+                nns->knn(trajPoint.features, matches.ids, matches.dists, knn, 0);
+                int ctr = 0;
+                for(int i = 0; i < matches.ids.size(); ++i)
+                {
+                    auto matchedPoint = map.features.col(matches.ids(i));
+                    if(std::abs(matchedPoint(0) - x) < 0.25 && std::abs(matchedPoint(1) - y) < 0.25)
+                    {
+                        z += matchedPoint(2);
+                        ctr++;
                     }
-                    z /= matches.ids.size();
-                } else {
+                }
+                if(ctr > 5)
+                {
+                    z /= ctr + 1;
+                }
+                else
+                {
                     z = prev_z;
                 }
                 prev_z = z;
@@ -117,9 +114,9 @@ void loadLTR(const std::string &inputFileName, const std::string &outputFileName
     outputFile.close();
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    if (argc <= 1)
+    if(argc <= 1)
     {
         std::cerr << "No ltr input filename provided" << std::endl;
         return -1;
@@ -128,7 +125,7 @@ int main(int argc, char *argv[])
     const std::string inputFilename = argv[1];
     std::string outputFilename = "/tmp/output.ltr";
 
-    if (argc <= 2)
+    if(argc <= 2)
     {
         std::cerr << "No ltr output filename provided, using " << outputFilename << std::endl;
     }
@@ -139,7 +136,7 @@ int main(int argc, char *argv[])
 
     bool computeZ = true;
     float z = 0.0;
-    if (argc == 4)
+    if(argc == 4)
     {
         computeZ = false;
         z = std::stof(argv[3]);

@@ -20,10 +20,10 @@ sudo make install
 
 ## Usage
 ```
-visualiseLtr <path_to_ltr_file>
+inspectLtr <path_to_ltr_file>
 ```
 
 ## Uninstallation
 ```
-sudo rm -rf /usr/local/bin/ltr_convertor /usr/local/bin/visualizeLtr /usr/local/etc/ltr_tools/
+sudo rm -rf /usr/local/bin/ltr2vtk_convertor /usr/local/bin/inspectLtr /usr/local/etc/ltr_tools/
 ```

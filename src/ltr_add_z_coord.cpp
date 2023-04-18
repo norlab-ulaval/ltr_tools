@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <pointmatcher/PointMatcher.h>
 #include <nabo/nabo.h>
 
@@ -42,6 +43,7 @@ void loadLTR(const std::string& inputFileName, const std::string& outputFileName
                 parsingMap = false;
                 std::cout << "Map done" << std::endl;
                 tmpMapFile.close();
+                std::filesystem::remove(tmpMapFileName);
                 map = PM::DataPoints::load(tmpMapFileName);
                 nns = std::shared_ptr<NNS>(NNS::create(map.features, map.features.rows() - 1,
                                                        NNS::KDTREE_LINEAR_HEAP, NNS::TOUCH_STATISTICS));

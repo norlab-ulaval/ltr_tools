@@ -46,9 +46,7 @@ ltr_add_z_coord <path_to_input_ltr_file> <path_to_output_ltr_file> <z_coord>
 
 ### ltrEditTrajectory
 Split an .ltr file into map and trajectory files and visualize them in ParaView with predefined window state.
-
 The user is asked to edit the trajectory and save it as a .csv file.
-
 A new .ltr file is then created, named `<original_ltr_file_name>_edited.ltr`
 
 #### Usage
@@ -64,7 +62,7 @@ Use the _Extract Selection_ button on the top toolbar to extract a new trajector
 only keeping the points in the current selection.
 If you want to remove the selected part of the trajectory,
 use the _Invert selection_ option in the _Find Data_ view.
-You can use the Add selection and Subtract selection buttons to create move complex to your trajectories.
+You can use the _Add selection_ and _Subtract selection_ buttons to create more complex to your trajectories.
 The extraction can also be chained.
 ![Paraview find data view](media/paraview_extract_selection.png)
 Finally, export the data. Find the Extracted Selection selected, press 'ctrl+s'
